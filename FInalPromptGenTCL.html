@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0059)file:///Users/shlokdas/Downloads/index%20(6).html#generator -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Content Lab — Prompt Generator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com/">
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-  <link href="./FInalPromptGenTCL_files/css2" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -589,11 +589,11 @@
 
   <!-- HEADER -->
   <header>
-    <a class="logo" href="file:///Users/shlokdas/Downloads/index%20(6).html#">The<span class="yellow">Content</span>Lab</a>
+    <a class="logo" href="#">The<span class="yellow">Content</span>Lab</a>
     <nav>
-      <a href="file:///Users/shlokdas/Downloads/index%20(6).html#generator">Generate</a>
-      <a href="file:///Users/shlokdas/Downloads/index%20(6).html#features">Features</a>
-      <a href="file:///Users/shlokdas/Downloads/index%20(6).html#generator">Get Started</a>
+      <a href="#generator">Generate</a>
+      <a href="#features">Features</a>
+      <a href="#generator">Get Started</a>
     </nav>
   </header>
 
@@ -607,8 +607,8 @@
         Built for brands, creators, and marketers who refuse to be forgettable.
       </p>
       <div class="cta-group">
-        <a href="file:///Users/shlokdas/Downloads/index%20(6).html#generator" class="btn-primary">Start Generating</a>
-        <a href="file:///Users/shlokdas/Downloads/index%20(6).html#features" class="btn-ghost">How It Works</a>
+        <a href="#generator" class="btn-primary">Start Generating</a>
+        <a href="#features" class="btn-ghost">How It Works</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -654,12 +654,12 @@
 
         <div class="form-group">
           <label>Brand / Creator Name</label>
-          <input class="form-input" type="text" id="brandName" placeholder="e.g. The Content Lab">
+          <input class="form-input" type="text" id="brandName" placeholder="e.g. The Content Lab" />
         </div>
 
         <div class="form-group">
           <label>Industry or Niche</label>
-          <input class="form-input" type="text" id="industry" placeholder="e.g. Wellness, SaaS, Fashion">
+          <input class="form-input" type="text" id="industry" placeholder="e.g. Wellness, SaaS, Fashion" />
         </div>
 
         <div class="form-group">
@@ -692,7 +692,7 @@
 
         <div class="form-group">
           <label>Target Audience</label>
-          <input class="form-input" type="text" id="audience" placeholder="e.g. Millennial founders, Gen Z creators">
+          <input class="form-input" type="text" id="audience" placeholder="e.g. Millennial founders, Gen Z creators" />
         </div>
 
         <div class="form-group">
@@ -704,7 +704,7 @@
           <label>Number of Prompts</label>
           <select class="form-select" id="numPrompts">
             <option value="3">3 prompts</option>
-            <option value="5" selected="">5 prompts</option>
+            <option value="5" selected>5 prompts</option>
             <option value="10">10 prompts</option>
           </select>
         </div>
@@ -714,7 +714,7 @@
       <div class="generate-bar">
         <p>Our AI generates platform-native, scroll-stopping prompts tailored to your brand voice and audience.</p>
         <button class="btn-generate" id="generateBtn" onclick="generatePrompts()">
-          <span class="spinner" id="spinner" style="display: none;"></span>
+          <span class="spinner" id="spinner"></span>
           <span id="btnText">Generate Prompts</span>
         </button>
       </div>
@@ -722,57 +722,12 @@
   </section>
 
   <!-- RESULTS -->
-  <section id="results" style="display: block;">
+  <section id="results">
     <div class="results-header">
-      <h3 id="resultsTitle">5 Instagram Prompts</h3>
-      <span class="results-meta" id="resultsMeta">Gucci · Generated 30 Mar 2026</span>
+      <h3 id="resultsTitle">Your Prompts</h3>
+      <span class="results-meta" id="resultsMeta"></span>
     </div>
-    <div class="prompts-grid" id="promptsGrid">
-        <div class="prompt-card" id="card-0">
-          <div class="prompt-number">Prompt 01</div>
-          <div class="prompt-text">Create a Reel that's a quick-cut montage of diverse Gen Z individuals styling the new Gucci shirt in their own unique ways – think street style, artistic vibes, casual cool. The hook: 'How are YOU rocking the new drop?' This taps into UGC and showcases versatility, making viewers imagine themselves in the shirt.</div>
-          <div class="prompt-actions">
-            <button class="btn-copy" onclick="copyPrompt(0, this)">Copy</button>
-            <button class="btn-save" onclick="savePrompt(0)">Save as .txt</button>
-          </div>
-        </div>
-      
-        <div class="prompt-card" id="card-1">
-          <div class="prompt-number">Prompt 02</div>
-          <div class="prompt-text">Post a carousel with the first slide being a super close-up, textured shot of the new shirt's fabric and details, followed by slides of different Gen Z micro-influencers subtly incorporating it into their outfits (not full outfit shots, but hints). The hook: 'It's all in the details... 👀' This builds intrigue and focuses on quality, appealing to a desire for unique, high-end pieces.</div>
-          <div class="prompt-actions">
-            <button class="btn-copy" onclick="copyPrompt(1, this)">Copy</button>
-            <button class="btn-save" onclick="savePrompt(1)">Save as .txt</button>
-          </div>
-        </div>
-      
-        <div class="prompt-card" id="card-2">
-          <div class="prompt-number">Prompt 03</div>
-          <div class="prompt-text">Run an Instagram Story series starting with a poll: 'Vibe check: Casual or dressed up with the new Gucci tee?' followed by quick clips of people answering the poll in the comments/DMs via video replies, then a final slide showing the shirt styled both ways. The hook: 'Your vote, your look. Let's see it!' This fosters direct interaction and makes the audience feel heard.</div>
-          <div class="prompt-actions">
-            <button class="btn-copy" onclick="copyPrompt(2, this)">Copy</button>
-            <button class="btn-save" onclick="savePrompt(2)">Save as .txt</button>
-          </div>
-        </div>
-      
-        <div class="prompt-card" id="card-3">
-          <div class="prompt-number">Prompt 04</div>
-          <div class="prompt-text">Craft a text-based post (or a visually appealing graphic with minimal text) asking a direct question: 'If this new Gucci shirt was a song, what would it be and why?' Encourage answers in the comments. The hook: 'What's the soundtrack to your style?' This sparks creative, personal engagement and connects fashion to cultural interests.</div>
-          <div class="prompt-actions">
-            <button class="btn-copy" onclick="copyPrompt(3, this)">Copy</button>
-            <button class="btn-save" onclick="savePrompt(3)">Save as .txt</button>
-          </div>
-        </div>
-      
-        <div class="prompt-card" id="card-4">
-          <div class="prompt-number">Prompt 05</div>
-          <div class="prompt-text">Post a flat lay of the new shirt alongside unexpected, cool accessories that Gen Z might pair with it (e.g., a vintage camera, a retro arcade token, a specific flavor of a popular energy drink). The hook: 'IYKYK: The ultimate Gucci tee flex combo.' This plays into insider knowledge and aspirational styling, creating a mood board for inspiration.</div>
-          <div class="prompt-actions">
-            <button class="btn-copy" onclick="copyPrompt(4, this)">Copy</button>
-            <button class="btn-save" onclick="savePrompt(4)">Save as .txt</button>
-          </div>
-        </div>
-      </div>
+    <div class="prompts-grid" id="promptsGrid"></div>
     <div style="margin-top:24px; display:flex; gap:12px; justify-content:flex-end;">
       <button class="btn-ghost" onclick="generatePrompts()" style="font-size:0.8rem;padding:10px 24px;">Regenerate</button>
       <button class="btn-ghost" onclick="copyAll()" style="font-size:0.8rem;padding:10px 24px;">Copy All</button>
@@ -1008,6 +963,5 @@ Return ONLY a JSON array of ${count} strings. No markdown fences, no preamble.`;
       return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
   </script>
-
-
-</body></html>
+</body>
+</html>
