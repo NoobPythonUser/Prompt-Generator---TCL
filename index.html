@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Content Lab — Prompt Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #3a3a3a;
+      --paper: #ffffff;
+      --cream: #fff8e1;
+      --accent: #f5c400;
+      --accent-dark: #d4a900;
+      --accent-text: #3a3a3a;
+      --muted: #888888;
+      --border: #e0e0e0;
+      --white: #ffffff;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    /* ── MASTHEAD ── */
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .logo .yellow { color: var(--accent); }
+
+    nav { display: flex; gap: 32px; }
+
+    nav a {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 72px);
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .hero-text {
+      padding: 80px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1.5px solid var(--ink);
+    }
+
+    .kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kicker::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 440px;
+      margin-bottom: 48px;
+    }
+
+    .cta-group { display: flex; gap: 16px; align-items: center; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--ink);
+      border: none;
+      padding: 14px 32px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      padding: 13px 28px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover { background: var(--ink); color: var(--white); }
+
+    .hero-visual {
+      background: var(--accent);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .hero-cards {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .preview-card {
+      background: rgba(255,255,255,0.88);
+      border: 1.5px solid rgba(0,0,0,0.1);
+      padding: 20px 24px;
+      color: var(--ink);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      position: relative;
+      animation: cardDrift 6s ease-in-out infinite;
+    }
+
+    .preview-card:nth-child(2) { animation-delay: -2s; }
+    .preview-card:nth-child(3) { animation-delay: -4s; }
+
+    @keyframes cardDrift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .preview-card-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .preview-card-text { color: #555; }
+
+    /* ── GENERATOR SECTION ── */
+    #generator {
+      padding: 96px 0;
+      max-width: 960px;
+      margin: 0 auto;
+      padding-left: 48px;
+      padding-right: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+      padding-bottom: 24px;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header .issue-no {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── FORM ── */
+    .generator-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1.5px solid var(--ink);
+    }
+
+    .form-col { padding: 40px; }
+    .form-col:first-child { border-right: 1.5px solid var(--ink); }
+
+    .form-group { margin-bottom: 32px; }
+
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--border);
+      padding: 10px 0;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus { border-bottom-color: var(--ink); }
+
+    .form-textarea {
+      resize: none;
+      height: 90px;
+      line-height: 1.6;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .platform-chip {
+      border: 1.5px solid var(--border);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      user-select: none;
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .platform-chip:hover { border-color: var(--ink); }
+
+    .platform-chip.active {
+      background: var(--accent);
+      color: var(--ink);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tone-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tone-pill {
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: transparent;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+    }
+
+    .tone-pill:hover { border-color: var(--ink); }
+
+    .tone-pill.active {
+      background: var(--accent);
+      color: var(--ink);
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .generate-bar {
+      grid-column: 1 / -1;
+      border-top: 1.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 40px;
+      background: #fffbea;
+    }
+
+    .generate-bar p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 340px;
+      line-height: 1.5;
+    }
+
+    .btn-generate {
+      background: var(--accent);
+      color: var(--ink);
+      border: none;
+      padding: 16px 48px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-generate:hover:not(:disabled) { background: var(--accent-dark); transform: translateY(-1px); }
+    .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESULTS ── */
+    #results { display: none; max-width: 960px; margin: 0 auto 80px; padding: 0 48px; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .results-meta {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .prompt-card {
+      border: 1.5px solid var(--border);
+      padding: 32px;
+      position: relative;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+
+    .prompt-card:hover { border-color: var(--ink); }
+
+    .prompt-number {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .prompt-text {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    .prompt-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-copy, .btn-save {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 8px 18px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font-body);
+      transition: all 0.15s;
+    }
+
+    .btn-copy:hover { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+    .btn-save:hover { background: #fffbea; color: var(--ink); border-color: var(--ink); }
+
+    .btn-copy.copied { background: #2e7d4f; color: white; border-color: #2e7d4f; }
+
+    /* ── FEATURES STRIP ── */
+    .features {
+      border-top: 1.5px solid var(--ink);
+      border-bottom: 1.5px solid var(--ink);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .feature-item {
+      padding: 56px 48px;
+      border-right: 1.5px solid var(--ink);
+    }
+
+    .feature-item:last-child { border-right: none; }
+
+    .feature-no {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .feature-item h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 14px;
+    }
+
+    .feature-item p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1.5px solid var(--ink);
+    }
+
+    .footer-logo {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .footer-logo .yellow { color: var(--accent); }
+
+    footer p {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--accent);
+      color: var(--ink);
+      font-weight: 600;
+      padding: 14px 28px;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 0 24px; }
+      nav { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .hero-text { padding: 48px 24px; }
+      #generator { padding: 48px 24px; }
+      .generator-form { grid-template-columns: 1fr; }
+      .form-col:first-child { border-right: none; border-bottom: 1.5px solid var(--ink); }
+      .features { grid-template-columns: 1fr; }
+      .feature-item { border-right: none; border-bottom: 1.5px solid var(--ink); padding: 40px 24px; }
+      .feature-item:last-child { border-bottom: none; }
+      .generate-bar { flex-direction: column; gap: 16px; padding: 24px; }
+      #results { padding: 0 24px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a class="logo" href="#">The<span class="yellow">Content</span>Lab</a>
+    <nav>
+      <a href="#generator">Generate</a>
+      <a href="#features">Features</a>
+      <a href="#generator">Get Started</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="kicker">Social Prompt Studio</div>
+      <h1>Write less.<br>Post <em>better.</em></h1>
+      <p class="hero-sub">
+        AI-powered social media prompts engineered to cut through the noise.
+        Built for brands, creators, and marketers who refuse to be forgettable.
+      </p>
+      <div class="cta-group">
+        <a href="#generator" class="btn-primary">Start Generating</a>
+        <a href="#features" class="btn-ghost">How It Works</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-grid"></div>
+      <div class="hero-cards">
+        <div class="preview-card">
+          <div class="preview-card-label">Instagram · Lifestyle Brand</div>
+          <div class="preview-card-text">The secret your morning routine is missing — and it's not another supplement. Share this with the person who needs to hear it. 🌿</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-label">LinkedIn · B2B SaaS</div>
+          <div class="preview-card-text">We saved our clients 14 hours a week. Here's the exact framework we used — no fluff, just the playbook.</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-label">Twitter · Creator Economy</div>
+          <div class="preview-card-text">Controversial take: consistency is overrated. What actually grows your audience? A thread 🧵</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GENERATOR -->
+  <section id="generator">
+    <div class="section-header">
+      <h2>Prompt<br>Generator</h2>
+      <span class="issue-no">Vol. I — Social Suite</span>
+    </div>
+
+    <div class="generator-form">
+      <!-- LEFT COL -->
+      <div class="form-col">
+        <div class="form-group">
+          <label>Platform</label>
+          <div class="platform-grid">
+            <div class="platform-chip active" data-platform="Instagram">Instagram</div>
+            <div class="platform-chip" data-platform="LinkedIn">LinkedIn</div>
+            <div class="platform-chip" data-platform="Twitter / X">Twitter / X</div>
+            <div class="platform-chip" data-platform="TikTok">TikTok</div>
+            <div class="platform-chip" data-platform="Facebook">Facebook</div>
+            <div class="platform-chip" data-platform="Pinterest">Pinterest</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Brand / Creator Name</label>
+          <input class="form-input" type="text" id="brandName" placeholder="e.g. The Content Lab" />
+        </div>
+
+        <div class="form-group">
+          <label>Industry or Niche</label>
+          <input class="form-input" type="text" id="industry" placeholder="e.g. Wellness, SaaS, Fashion" />
+        </div>
+
+        <div class="form-group">
+          <label>Post Goal</label>
+          <select class="form-select" id="postGoal">
+            <option value="Grow audience">Grow audience</option>
+            <option value="Drive engagement">Drive engagement</option>
+            <option value="Boost sales">Boost sales</option>
+            <option value="Build community">Build community</option>
+            <option value="Educate followers">Educate followers</option>
+            <option value="Share a story">Share a story</option>
+            <option value="Go viral">Go viral</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RIGHT COL -->
+      <div class="form-col">
+        <div class="form-group">
+          <label>Tone of Voice</label>
+          <div class="tone-pills">
+            <div class="tone-pill active" data-tone="Conversational">Conversational</div>
+            <div class="tone-pill" data-tone="Authoritative">Authoritative</div>
+            <div class="tone-pill" data-tone="Playful">Playful</div>
+            <div class="tone-pill" data-tone="Inspirational">Inspirational</div>
+            <div class="tone-pill" data-tone="Witty">Witty</div>
+            <div class="tone-pill" data-tone="Bold">Bold</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Target Audience</label>
+          <input class="form-input" type="text" id="audience" placeholder="e.g. Millennial founders, Gen Z creators" />
+        </div>
+
+        <div class="form-group">
+          <label>Topic or Theme (optional)</label>
+          <textarea class="form-textarea" id="topic" placeholder="e.g. New product launch, behind-the-scenes, industry insight, trending topic..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Number of Prompts</label>
+          <select class="form-select" id="numPrompts">
+            <option value="3">3 prompts</option>
+            <option value="5" selected>5 prompts</option>
+            <option value="10">10 prompts</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- GENERATE BAR -->
+      <div class="generate-bar">
+        <p>Our AI generates platform-native, scroll-stopping prompts tailored to your brand voice and audience.</p>
+        <button class="btn-generate" id="generateBtn" onclick="generatePrompts()">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnText">Generate Prompts</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results">
+    <div class="results-header">
+      <h3 id="resultsTitle">Your Prompts</h3>
+      <span class="results-meta" id="resultsMeta"></span>
+    </div>
+    <div class="prompts-grid" id="promptsGrid"></div>
+    <div style="margin-top:24px; display:flex; gap:12px; justify-content:flex-end;">
+      <button class="btn-ghost" onclick="generatePrompts()" style="font-size:0.8rem;padding:10px 24px;">Regenerate</button>
+      <button class="btn-ghost" onclick="copyAll()" style="font-size:0.8rem;padding:10px 24px;">Copy All</button>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="feature-item">
+      <div class="feature-no">01</div>
+      <h3>Platform-Native Intelligence</h3>
+      <p>Every prompt is engineered for the algorithm. What works on LinkedIn reads differently than TikTok — and our system knows the difference.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-no">02</div>
+      <h3>Voice That Sounds Like You</h3>
+      <p>Choose your tone, define your audience, describe your niche. The output feels written by your brand — not a generic AI.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-no">03</div>
+      <h3>Built for Volume</h3>
+      <p>Generate a week's worth of content ideas in under 60 seconds. Copy, adapt, and post — the content calendar bottleneck is officially over.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">The<span class="yellow">Content</span>Lab</div>
+    <p>Crafted for creators who mean business.</p>
+    <p>© 2025 The Content Lab. All rights reserved.</p>
+  </footer>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── STATE ──
+    let selectedPlatform = 'Instagram';
+    let selectedTone = 'Conversational';
+
+    // ── PLATFORM CHIPS ──
+    document.querySelectorAll('.platform-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.platform-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        selectedPlatform = chip.dataset.platform;
+      });
+    });
+
+    // ── TONE PILLS ──
+    document.querySelectorAll('.tone-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        selectedTone = pill.dataset.tone;
+      });
+    });
+
+    // ── GENERATE ──
+    async function generatePrompts() {
+      const brand     = document.getElementById('brandName').value.trim() || 'our brand';
+      const industry  = document.getElementById('industry').value.trim()  || 'general';
+      const audience  = document.getElementById('audience').value.trim()  || 'general audience';
+      const goal      = document.getElementById('postGoal').value;
+      const topic     = document.getElementById('topic').value.trim();
+      const count     = parseInt(document.getElementById('numPrompts').value);
+
+      // UI: loading state
+      const btn     = document.getElementById('generateBtn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btnText');
+      btn.disabled  = true;
+      spinner.style.display = 'block';
+      btnText.textContent = 'Generating…';
+
+      const topicLine = topic ? `The topic or theme is: "${topic}".` : 'Choose a compelling, topical theme.';
+
+      // OllamaFreeAPI-compatible: uses the same open-source models (Llama, Mistral, DeepSeek)
+      // via OpenRouter's free tier
+      const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+      const API_KEY = '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';
+      const MODEL   = 'openrouter/auto';
+
+      const systemMsg = `You are a world-class social media strategist and copywriter. You generate scroll-stopping, platform-native social media post prompts. Return ONLY a raw JSON array of exactly ${count} strings. No markdown, no explanation, no extra keys.`;
+
+      const userMsg = `Generate ${count} creative social media post PROMPTS for:
+
+Platform: ${selectedPlatform}
+Brand/Creator: ${brand}
+Industry/Niche: ${industry}
+Target Audience: ${audience}
+Tone of Voice: ${selectedTone}
+Goal: ${goal}
+${topicLine}
+
+Rules:
+- Each prompt describes what to post and WHY it will resonate — not the post itself
+- Be specific, vivid, and immediately actionable
+- Match ${selectedPlatform} norms (length, format, culture)
+- Tone must feel ${selectedTone}
+- Vary formats (carousel, reel, text post, story, poll, etc.) across all ${count} prompts
+- Include a brief note on the hook or angle that makes each idea powerful
+
+Return ONLY a JSON array of ${count} strings. No markdown fences, no preamble.`;
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`,
+            'HTTP-Referer': window.location.href,
+            'X-Title': 'The Content Lab'
+          },
+          body: JSON.stringify({
+            model: MODEL,
+            messages: [
+              { role: 'system', content: systemMsg },
+              { role: 'user',   content: userMsg }
+            ],
+            temperature: 0.9,
+            max_tokens: 2048
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const msg = data?.error?.message || `API error ${response.status}`;
+          throw new Error(msg);
+        }
+
+        const raw = data.choices?.[0]?.message?.content || '';
+
+        // Robust JSON extraction — strip markdown fences, find array anywhere in text
+        const clean = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+        const match = clean.match(/\[[\s\S]*\]/);
+        if (!match) throw new Error('Could not find a JSON array in the response. Raw response:\n' + raw.slice(0, 300));
+
+        const prompts = JSON.parse(match[0]);
+        if (!Array.isArray(prompts) || prompts.length === 0) {
+          throw new Error('Response was not a valid array of prompts.');
+        }
+
+        renderResults(prompts, count, selectedPlatform, brand);
+      } catch (err) {
+        console.error('Prompt generation error:', err);
+        // Show error in the results area so it's clearly visible
+        const resultsSection = document.getElementById('results');
+        const grid = document.getElementById('promptsGrid');
+        document.getElementById('resultsTitle').textContent = 'Something went wrong';
+        document.getElementById('resultsMeta').textContent = '';
+        grid.innerHTML = `
+          <div style="border:1.5px solid #e0e0e0;padding:32px;background:#fff8e1;color:#3a3a3a;">
+            <div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:12px;">Error Details</div>
+            <p style="font-size:0.95rem;line-height:1.7;">${escapeHTML(err.message || 'Unknown error. Check your browser console for details.')}</p>
+          </div>`;
+        resultsSection.style.display = 'block';
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.textContent = 'Generate Prompts';
+      }
+    }
+
+    // ── RENDER ──
+    function renderResults(prompts, count, platform, brand) {
+      const resultsSection = document.getElementById('results');
+      const grid = document.getElementById('promptsGrid');
+      const title = document.getElementById('resultsTitle');
+      const meta  = document.getElementById('resultsMeta');
+
+      title.textContent = `${count} ${platform} Prompts`;
+      meta.textContent  = `${brand} · Generated ${new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })}`;
+
+      grid.innerHTML = prompts.map((text, i) => `
+        <div class="prompt-card" id="card-${i}">
+          <div class="prompt-number">Prompt ${String(i + 1).padStart(2, '0')}</div>
+          <div class="prompt-text">${escapeHTML(text)}</div>
+          <div class="prompt-actions">
+            <button class="btn-copy" onclick="copyPrompt(${i}, this)">Copy</button>
+            <button class="btn-save" onclick="savePrompt(${i})">Save as .txt</button>
+          </div>
+        </div>
+      `).join('');
+
+      resultsSection.style.display = 'block';
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── COPY SINGLE ──
+    function copyPrompt(index, btn) {
+      const card = document.getElementById(`card-${index}`);
+      const text = card.querySelector('.prompt-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    // ── COPY ALL ──
+    function copyAll() {
+      const cards = document.querySelectorAll('.prompt-card');
+      const all = Array.from(cards).map((c, i) => `Prompt ${i+1}:\n${c.querySelector('.prompt-text').textContent}`).join('\n\n---\n\n');
+      navigator.clipboard.writeText(all).then(() => showToast('All prompts copied to clipboard'));
+    }
+
+    // ── SAVE AS TXT ──
+    function savePrompt(index) {
+      const card = document.getElementById(`card-${index}`);
+      const text = card.querySelector('.prompt-text').textContent;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `content-lab-prompt-${index + 1}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+
+    // ── UTILS ──
+    function escapeHTML(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+  </script>
+</body>
+</html>
